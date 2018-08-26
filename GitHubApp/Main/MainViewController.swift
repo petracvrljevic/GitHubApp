@@ -38,11 +38,25 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.register(UINib(nibName: "RepoTableViewCell", bundle: nil), forCellReuseIdentifier: "repoCell")
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "logout"), style: .plain, target: self, action: #selector(handleLogout))
-        self.navigationItem.rightBarButtonItem?.tintColor = UIColor.black
+        setRightBarButtons()
         
         setupSearch()
         downloadRepositories()
+    }
+    
+    func setRightBarButtons() {
+        
+        let logoutBarButton = UIBarButtonItem(image: UIImage(named: "logoutIcon"), style: .plain, target: self, action: #selector(handleLogout))
+        let profileBarButton = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .plain, target: self, action: #selector(handleProfile))
+        logoutBarButton.tintColor = UIColor.black
+        profileBarButton.tintColor = UIColor.black
+
+        self.navigationItem.rightBarButtonItems = [logoutBarButton, profileBarButton]
+    }
+    
+    @objc func handleProfile() {
+        let userDetailsVC = UserDetailsViewController()
+        self.navigationController?.pushViewController(userDetailsVC, animated: true)
     }
     
     @objc func handleLogout() {
@@ -65,7 +79,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             MBProgressHUD.hide(for: self.view, animated: true)
             
-            if response.result.isSuccess {
+            if let statusCode = response.response?.statusCode, statusCode == 200 {
                 if let reposArray = response.result.value {
                     self.repositories = reposArray
 
@@ -96,29 +110,33 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 Alamofire.request(repoURL, headers: headers).responseObject(completionHandler: { (response: DataResponse<Repo>) in
                     
-                    if let repoDetails = response.result.value {
-                        repo.language = repoDetails.language
-                        repo.forks = repoDetails.forks
-                        repo.openIssues = repoDetails.openIssues
-                        repo.watchers = repoDetails.watchers
-                        repo.created = repoDetails.created
-                        repo.updated = repoDetails.updated
+                    if let statusCode = response.response?.statusCode, statusCode == 200 {
+                        if let repoDetails = response.result.value {
+                            repo.language = repoDetails.language
+                            repo.forks = repoDetails.forks
+                            repo.openIssues = repoDetails.openIssues
+                            repo.watchers = repoDetails.watchers
+                            repo.created = repoDetails.created
+                            repo.updated = repoDetails.updated
+                        }
+                        self.tableView.reloadData()
                     }
-                    self.tableView.reloadData()
                 })
             }
             if let user = repo.owner, let userURLString = user.url, let userURL = URL(string: userURLString) {
                 
                 Alamofire.request(userURL, headers: headers).responseObject(completionHandler: { (response: DataResponse<User>) in
                     
-                    if let userDetails = response.result.value {
-                        user.blog = userDetails.blog
-                        user.followers = userDetails.followers
-                        user.fullName = userDetails.fullName
-                        user.location = userDetails.location
-                        user.repos = userDetails.repos
+                    if let statusCode = response.response?.statusCode, statusCode == 200 {
+                        if let userDetails = response.result.value {
+                            user.blog = userDetails.blog
+                            user.followers = userDetails.followers
+                            user.fullName = userDetails.fullName
+                            user.location = userDetails.location
+                            user.repos = userDetails.repos
+                        }
+                        self.tableView.reloadData()
                     }
-                    self.tableView.reloadData()
                 })
             }
         }
@@ -204,7 +222,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             MBProgressHUD.hide(for: self.view, animated: true)
             
-            if response.result.isSuccess {
+            if let statusCode = response.response?.statusCode, statusCode == 200 {
                 if let reposArray = response.result.value {
                     if self.searchActive {
                         self.searchedRepositories.append(contentsOf: reposArray)
@@ -218,10 +236,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.tableView.reloadData()
                     self.isLoading = false
                 }
-            }
-            
-            if let nextLink = response.response?.findLink(relation: "next") {
-                self.nextURL = nextLink.uri
+                if let nextLink = response.response?.findLink(relation: "next") {
+                    self.nextURL = nextLink.uri
+                }
             }
         }
     }
@@ -281,21 +298,43 @@ extension MainViewController: UISearchBarDelegate {
             
             MBProgressHUD.hide(for: self.view, animated: true)
             
-            if response.result.isSuccess {
+            if let statusCode = response.response?.statusCode, statusCode == 200 {
                 if let reposArray = response.result.value {
                     self.searchedRepositories = reposArray
                     
-                    self.getDetails(in: self.searchedRepositories)
-                    
-                    self.tableView.reloadData()
-                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                    if !self.searchedRepositories.isEmpty {
+                        if let nextLink = response.response?.findLink(relation: "next") {
+                            self.nextURL = nextLink.uri
+                        }
+                        
+                        self.getDetails(in: self.searchedRepositories)
+                        
+                        self.tableView.reloadData()
+                        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                    }
+                    else {
+                        let alertVC = UIAlertController(title: "Error", message: "Not found", preferredStyle: .alert)
+                        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                        self.present(alertVC, animated: true, completion: nil)
+                    }
                 }
             }
-            
-            if let nextLink = response.response?.findLink(relation: "next") {
-                self.nextURL = nextLink.uri
+            else {
+                guard let error = response.error?.localizedDescription else { return }
+                let alertVC = UIAlertController(title: "Error", message: "Error: " + error, preferredStyle: .alert)
+                alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                self.present(alertVC, animated: true, completion: nil)
             }
         }
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchActive = true
+        tableView.reloadData()
+        if self.navigationItem.leftBarButtonItem == nil {
+            addDropDownMenu()
+        }
+        return true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -306,19 +345,15 @@ extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         turnOffSearching()
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        if !repositories.isEmpty {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
-            searchActive = false
+            self.searchedRepositories.removeAll()
             tableView.reloadData()
-        }
-        else {
-            searchActive = true
-            if self.navigationItem.leftBarButtonItem == nil {
-                 addDropDownMenu()
-            }
         }
     }
     

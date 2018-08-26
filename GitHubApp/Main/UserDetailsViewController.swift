@@ -9,6 +9,9 @@
 import UIKit
 import Kingfisher
 import Freedom
+import Alamofire
+import AlamofireObjectMapper
+import MBProgressHUD
 
 class UserDetailsViewController: UIViewController {
     
@@ -25,7 +28,31 @@ class UserDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if user == nil {
+            guard let headers = Helper.getBasicAuth() else { return }
+            guard let url = Helper.loggedUserURL() else { return }
+            
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+            
+            Alamofire.request(url, headers: headers).responseObject { (response: DataResponse<User>) in
+                
+                MBProgressHUD.hide(for: self.view, animated: true)
+                
+                if let statusCode = response.response?.statusCode, statusCode == 200 {
+                    if let user = response.value {
+                        self.user = user
+                        self.fillDetails()
+                    }
+                }
+            }
+        }
+        else {
+         fillDetails()
+        }
+    }
+    
+    func fillDetails() {
         guard let user = user else { return }
         
         if let avatarURL = user.avatarURL, let url = URL(string: avatarURL) {
@@ -59,21 +86,24 @@ class UserDetailsViewController: UIViewController {
         if let url = user.htmlURL {
             urlButton.setTitle(url, for: .normal)
         }
-        
     }
     
     @IBAction func blogTapped(_ sender: UIButton) {
         if let blogString = user?.blog, let url = URL(string: blogString) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            openInBrowsers(url: url)
         }
     }
     
     @IBAction func urlTapped(_ sender: UIButton) {
         if let urlString = user?.htmlURL, let url = URL(string: urlString) {
-            let activities = Freedom.browsers([.chrome, .firefox, .safari])
-            let vc = UIActivityViewController(activityItems: [url], applicationActivities: activities)
-            present(vc, animated: true, completion: nil)
+            openInBrowsers(url: url)
         }
+    }
+    
+    func openInBrowsers(url: URL) {
+        let activities = Freedom.browsers([.chrome, .firefox, .safari])
+        let vc = UIActivityViewController(activityItems: [url], applicationActivities: activities)
+        present(vc, animated: true, completion: nil)
     }
 
 }

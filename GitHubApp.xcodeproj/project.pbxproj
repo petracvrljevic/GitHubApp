@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4091B36FBFF288F9E58D0A48 /* Pods_GitHubApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9121C41D0BFED04EEBDEC667 /* Pods_GitHubApp.framework */; };
+		D028A62F213304EF0078090C /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = D028A62E213304EF0078090C /* user.png */; };
+		D028A6322133053C0078090C /* logoutIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D028A6302133053C0078090C /* logoutIcon.png */; };
+		D028A6332133053C0078090C /* userIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D028A6312133053C0078090C /* userIcon.png */; };
 		D049DD362130467C000CCFF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049DD352130467C000CCFF2 /* AppDelegate.swift */; };
 		D049DD3D2130467E000CCFF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D049DD3C2130467E000CCFF2 /* Assets.xcassets */; };
 		D049DD402130467E000CCFF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D049DD3E2130467E000CCFF2 /* LaunchScreen.storyboard */; };
@@ -20,18 +23,19 @@
 		D081770E2131DAF4005667B7 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D081770C2131DAF4005667B7 /* LoginViewController.xib */; };
 		D08177112131E3C9005667B7 /* RepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081770F2131E3C9005667B7 /* RepoTableViewCell.swift */; };
 		D08177122131E3C9005667B7 /* RepoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D08177102131E3C9005667B7 /* RepoTableViewCell.xib */; };
-		D08177142131E845005667B7 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = D08177132131E844005667B7 /* user.png */; };
 		D08177172131EA43005667B7 /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08177152131EA43005667B7 /* UserDetailsViewController.swift */; };
 		D08177182131EA43005667B7 /* UserDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D08177162131EA43005667B7 /* UserDetailsViewController.xib */; };
 		D08177202131EB67005667B7 /* RepoDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D081771E2131EB67005667B7 /* RepoDetailsViewController.swift */; };
 		D08177212131EB67005667B7 /* RepoDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D081771F2131EB67005667B7 /* RepoDetailsViewController.xib */; };
-		D08177232132C935005667B7 /* logout.png in Resources */ = {isa = PBXBuildFile; fileRef = D08177222132C935005667B7 /* logout.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		51925A54AC2CFDC9FFFDDEA3 /* Pods-GitHubApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9121C41D0BFED04EEBDEC667 /* Pods_GitHubApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B8C8038765BBEB9A732D207 /* Pods-GitHubApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubApp/Pods-GitHubApp.release.xcconfig"; sourceTree = "<group>"; };
+		D028A62E213304EF0078090C /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
+		D028A6302133053C0078090C /* logoutIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoutIcon.png; sourceTree = "<group>"; };
+		D028A6312133053C0078090C /* userIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userIcon.png; sourceTree = "<group>"; };
 		D049DD322130467C000CCFF2 /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D049DD352130467C000CCFF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D049DD3C2130467E000CCFF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -46,12 +50,10 @@
 		D081770C2131DAF4005667B7 /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		D081770F2131E3C9005667B7 /* RepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoTableViewCell.swift; sourceTree = "<group>"; };
 		D08177102131E3C9005667B7 /* RepoTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RepoTableViewCell.xib; sourceTree = "<group>"; };
-		D08177132131E844005667B7 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		D08177152131EA43005667B7 /* UserDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewController.swift; sourceTree = "<group>"; };
 		D08177162131EA43005667B7 /* UserDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserDetailsViewController.xib; sourceTree = "<group>"; };
 		D081771E2131EB67005667B7 /* RepoDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDetailsViewController.swift; sourceTree = "<group>"; };
 		D081771F2131EB67005667B7 /* RepoDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RepoDetailsViewController.xib; sourceTree = "<group>"; };
-		D08177222132C935005667B7 /* logout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logout.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,8 +123,9 @@
 		D04E9E192132EFC8009C5F51 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				D08177132131E844005667B7 /* user.png */,
-				D08177222132C935005667B7 /* logout.png */,
+				D028A62E213304EF0078090C /* user.png */,
+				D028A6302133053C0078090C /* logoutIcon.png */,
+				D028A6312133053C0078090C /* userIcon.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -213,13 +216,14 @@
 			files = (
 				D081770E2131DAF4005667B7 /* LoginViewController.xib in Resources */,
 				D08177212131EB67005667B7 /* RepoDetailsViewController.xib in Resources */,
+				D028A62F213304EF0078090C /* user.png in Resources */,
 				D049DD402130467E000CCFF2 /* LaunchScreen.storyboard in Resources */,
-				D08177142131E845005667B7 /* user.png in Resources */,
 				D049DD4A213046FC000CCFF2 /* MainViewController.xib in Resources */,
 				D049DD3D2130467E000CCFF2 /* Assets.xcassets in Resources */,
 				D08177122131E3C9005667B7 /* RepoTableViewCell.xib in Resources */,
+				D028A6322133053C0078090C /* logoutIcon.png in Resources */,
 				D08177182131EA43005667B7 /* UserDetailsViewController.xib in Resources */,
-				D08177232132C935005667B7 /* logout.png in Resources */,
+				D028A6332133053C0078090C /* userIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

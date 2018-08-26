@@ -46,14 +46,14 @@ class LoginViewController: UIViewController {
             
             MBProgressHUD.hide(for: self.view, animated: true)
             
-            if response.result.isSuccess {
+            if let statusCode = response.response?.statusCode, statusCode == 200 {
                 UserDefaults.standard.set(true, forKey: "logged")
                 UserDefaults.standard.synchronize()
                 let mainVC = MainViewController()
                 self.present(UINavigationController(rootViewController: mainVC), animated: true, completion: nil)
             }
             else {
-                let alertVC = UIAlertController(title: "Error", message: "Problem with logging in", preferredStyle: .alert)
+                let alertVC = UIAlertController(title: "Error", message: "Problem with logging in. Check username and password.", preferredStyle: .alert)
                 alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                 self.present(alertVC, animated: true, completion: nil)
             }

@@ -40,5 +40,12 @@ class Helper: NSObject {
         }
         return nil
     }
+    
+    static func loggedUserURL() -> URL? {
+        if let username = UserDefaults.standard.string(forKey: "username") {
+            return URL(string: basicURL + "/users/\(username)")
+        }
+        return nil
+    }
 
 }
