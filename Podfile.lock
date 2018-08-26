@@ -10,6 +10,7 @@ PODS:
   - MBProgressHUD (1.1.0)
   - ObjectMapper (3.3.0)
   - SwiftyJSON (4.1.0)
+  - WebLinking (2.0.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - Kingfisher (~> 4.0)
   - MBProgressHUD
   - SwiftyJSON
+  - WebLinking
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -31,6 +33,7 @@ SPEC REPOS:
     - MBProgressHUD
     - ObjectMapper
     - SwiftyJSON
+    - WebLinking
 
 EXTERNAL SOURCES:
   BTNavigationDropdownMenu:
@@ -51,7 +54,8 @@ SPEC CHECKSUMS:
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
+  WebLinking: b476999d59f78bd6649e6754d60693a7d147b00c
 
-PODFILE CHECKSUM: 73b1314eaf3ed1c3e20579f968428d975f0ae81f
+PODFILE CHECKSUM: abbd9528af1c79df824f5c78653c5936e4de746f
 
 COCOAPODS: 1.5.3

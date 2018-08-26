@@ -106,16 +106,25 @@
 			children = (
 				D049DD352130467C000CCFF2 /* AppDelegate.swift */,
 				D049DD4B213049E1000CCFF2 /* Helper.swift */,
+				D049DD4D21304DF6000CCFF2 /* User.swift */,
+				D08177072131C0C9005667B7 /* Repo.swift */,
 				D081771B2131EA76005667B7 /* Main */,
-				D081771A2131EA69005667B7 /* Model */,
 				D08177192131EA5D005667B7 /* Login */,
+				D04E9E192132EFC8009C5F51 /* Images */,
 				D049DD3C2130467E000CCFF2 /* Assets.xcassets */,
 				D049DD3E2130467E000CCFF2 /* LaunchScreen.storyboard */,
 				D049DD412130467E000CCFF2 /* Info.plist */,
+			);
+			path = GitHubApp;
+			sourceTree = "<group>";
+		};
+		D04E9E192132EFC8009C5F51 /* Images */ = {
+			isa = PBXGroup;
+			children = (
 				D08177132131E844005667B7 /* user.png */,
 				D08177222132C935005667B7 /* logout.png */,
 			);
-			path = GitHubApp;
+			path = Images;
 			sourceTree = "<group>";
 		};
 		D08177192131EA5D005667B7 /* Login */ = {
@@ -127,34 +136,7 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		D081771A2131EA69005667B7 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				D049DD4D21304DF6000CCFF2 /* User.swift */,
-				D08177072131C0C9005667B7 /* Repo.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		D081771B2131EA76005667B7 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				D081771C2131EA7F005667B7 /* View */,
-				D081771D2131EA87005667B7 /* Controller */,
-			);
-			path = Main;
-			sourceTree = "<group>";
-		};
-		D081771C2131EA7F005667B7 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				D081770F2131E3C9005667B7 /* RepoTableViewCell.swift */,
-				D08177102131E3C9005667B7 /* RepoTableViewCell.xib */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		D081771D2131EA87005667B7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				D049DD47213046FC000CCFF2 /* MainViewController.swift */,
@@ -163,8 +145,10 @@
 				D081771F2131EB67005667B7 /* RepoDetailsViewController.xib */,
 				D08177152131EA43005667B7 /* UserDetailsViewController.swift */,
 				D08177162131EA43005667B7 /* UserDetailsViewController.xib */,
+				D081770F2131E3C9005667B7 /* RepoTableViewCell.swift */,
+				D08177102131E3C9005667B7 /* RepoTableViewCell.xib */,
 			);
-			path = Controller;
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +242,7 @@
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/WebLinking/WebLinking.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -270,6 +255,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebLinking.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

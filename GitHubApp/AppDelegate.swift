@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        checkIsUserLogged()
+        setRootViewController()
         
         window?.makeKeyAndVisible()
         
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func checkIsUserLogged() {
+    func setRootViewController() {
         if UserDefaults.standard.bool(forKey: "logged") {
             let mainVC = MainViewController()
             window?.rootViewController = UINavigationController(rootViewController: mainVC)

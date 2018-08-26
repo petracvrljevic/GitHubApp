@@ -12,6 +12,7 @@ import AlamofireObjectMapper
 import Kingfisher
 import BTNavigationDropdownMenu
 import MBProgressHUD
+import WebLinking
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
 
@@ -23,6 +24,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var sortType: SortType?
     var searchActive = false
+    
+    var nextURL: String = ""
+    var isLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,10 +52,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         UserDefaults.standard.synchronize()
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.checkIsUserLogged()
+        appDelegate.setRootViewController()
     }
-    
-    
+
     func downloadRepositories() {
         
         guard let headers = Helper.getBasicAuth() else { return }
@@ -67,6 +70,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.repositories = reposArray
 
                     self.getDetails(in: self.repositories)
+                    
+                    if let nextLink = response.response?.findLink(relation: "next") {
+                        self.nextURL = nextLink.uri
+                    }
                 }
             }
             else {
@@ -86,7 +93,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         for repo in repositories {
             if let repoURLString = repo.url, let repoURL = URL(string: repoURLString) {
+                
                 Alamofire.request(repoURL, headers: headers).responseObject(completionHandler: { (response: DataResponse<Repo>) in
+                    
                     if let repoDetails = response.result.value {
                         repo.language = repoDetails.language
                         repo.forks = repoDetails.forks
@@ -99,7 +108,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 })
             }
             if let user = repo.owner, let userURLString = user.url, let userURL = URL(string: userURLString) {
+                
                 Alamofire.request(userURL, headers: headers).responseObject(completionHandler: { (response: DataResponse<User>) in
+                    
                     if let userDetails = response.result.value {
                         user.blog = userDetails.blog
                         user.followers = userDetails.followers
@@ -132,9 +143,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.sortType = SortType.updated
                 default:
                     print("")
-                }
-                if self.searchActive, let text = self.searchBar.text {
-                    self.searchRepositories(q: text)
                 }
             }
             
@@ -169,7 +177,53 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.forksLabel.text = "\(repo.forks ?? 0)"
         cell.issuesLabel.text = "\(repo.openIssues ?? 0)"
         cell.watchersLabel.text = "\(repo.watchers ?? 0)"
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let totalRecords = searchActive ? searchedRepositories.count : repositories.count
+        if (indexPath.row + 1 == totalRecords && isLoading == false) {
+            isLoading = true
+            if searchActive {
+                getMoreRepositories(keyPath: "items")
+            }
+            else {
+                getMoreRepositories(keyPath: "")
+            }
+        }
+    }
+    
+    func getMoreRepositories(keyPath: String) {
+        guard let headers = Helper.getBasicAuth() else { return }
+        guard let url = URL(string: nextURL) else { return }
+        
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+    
+        Alamofire.request(url, method: .get, headers: headers).responseArray(keyPath: keyPath) { (response: DataResponse<[Repo]>) in
+            
+            MBProgressHUD.hide(for: self.view, animated: true)
+            
+            if response.result.isSuccess {
+                if let reposArray = response.result.value {
+                    if self.searchActive {
+                        self.searchedRepositories.append(contentsOf: reposArray)
+                        self.getDetails(in: self.searchedRepositories)
+                    }
+                    else {
+                        self.repositories.append(contentsOf: reposArray)
+                        self.getDetails(in: self.repositories)
+                    }
+                    
+                    self.tableView.reloadData()
+                    self.isLoading = false
+                }
+            }
+            
+            if let nextLink = response.response?.findLink(relation: "next") {
+                self.nextURL = nextLink.uri
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -234,11 +288,12 @@ extension MainViewController: UISearchBarDelegate {
                     self.getDetails(in: self.searchedRepositories)
                     
                     self.tableView.reloadData()
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 }
             }
             
-            if let nextLink = response.response?.allHeaderFields["Link"] as? String {
-                print(nextLink)
+            if let nextLink = response.response?.findLink(relation: "next") {
+                self.nextURL = nextLink.uri
             }
         }
     }
@@ -251,6 +306,7 @@ extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         turnOffSearching()
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -269,6 +325,7 @@ extension MainViewController: UISearchBarDelegate {
     func turnOffSearching() {
         searchActive = false
         searchBar.endEditing(true)
+        searchBar.text = ""
         tableView.reloadData()
         addDropDownMenu()
         DispatchQueue.main.async {

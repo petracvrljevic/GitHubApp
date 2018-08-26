@@ -14,5 +14,6 @@ target 'GitHubApp' do
   pod 'Kingfisher', '~> 4.0'
   pod 'Freedom'
   pod 'KeychainSwift'
+  pod 'WebLinking'
 
 end
