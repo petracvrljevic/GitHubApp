@@ -88,5 +88,12 @@ class RepoDetailsViewController: UIViewController {
         present(vc, animated: true, completion: nil)
     }
     
-
+    @IBAction func userDetailsTapped(_ sender: UIButton) {
+        if let user = repo?.owner {
+            let userDetailsVC = UserDetailsViewController()
+            userDetailsVC.user = user
+            self.navigationController?.pushViewController(userDetailsVC, animated: true)
+        }
+    }
+    
 }
