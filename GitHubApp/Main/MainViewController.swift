@@ -25,7 +25,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     var sortType: SortType?
     var searchActive = false
     
-    var nextURL: String = ""
+    var repoNextURL: String = ""
+    var searchNextURL: String = ""
     var isLoading = false
     
     override func viewDidLoad() {
@@ -73,7 +74,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         guard let headers = Helper.getBasicAuth() else { return }
         
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        let proggressNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        proggressNotification.isUserInteractionEnabled = false
         
         Alamofire.request(Helper.allRepositoriesURL, headers: headers).responseArray { (response: DataResponse<[Repo]>) in
             
@@ -86,7 +88,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.getDetails(in: self.repositories)
                     
                     if let nextLink = response.response?.findLink(relation: "next") {
-                        self.nextURL = nextLink.uri
+                        self.repoNextURL = nextLink.uri
                     }
                 }
             }
@@ -214,9 +216,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func getMoreRepositories(keyPath: String) {
         guard let headers = Helper.getBasicAuth() else { return }
-        guard let url = URL(string: nextURL) else { return }
+        guard let url = searchActive ? URL(string: searchNextURL) : URL(string: repoNextURL) else { return }
         
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        let proggressNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        proggressNotification.isUserInteractionEnabled = false
     
         Alamofire.request(url, method: .get, headers: headers).responseArray(keyPath: keyPath) { (response: DataResponse<[Repo]>) in
             
@@ -237,7 +240,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.isLoading = false
                 }
                 if let nextLink = response.response?.findLink(relation: "next") {
-                    self.nextURL = nextLink.uri
+                    if self.searchActive {
+                        self.searchNextURL = nextLink.uri
+                    }
+                    else {
+                        self.repoNextURL = nextLink.uri
+                    }
                 }
             }
         }
@@ -292,7 +300,8 @@ extension MainViewController: UISearchBarDelegate {
         
         guard let headers = Helper.getBasicAuth() else { return }
         
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        let proggressNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        proggressNotification.isUserInteractionEnabled = false
         
         Alamofire.request(Helper.searchURL, method: .get, parameters: params, headers: headers).responseArray(keyPath: "items") { (response: DataResponse<[Repo]>) in
             
@@ -304,7 +313,7 @@ extension MainViewController: UISearchBarDelegate {
                     
                     if !self.searchedRepositories.isEmpty {
                         if let nextLink = response.response?.findLink(relation: "next") {
-                            self.nextURL = nextLink.uri
+                            self.searchNextURL = nextLink.uri
                         }
                         
                         self.getDetails(in: self.searchedRepositories)

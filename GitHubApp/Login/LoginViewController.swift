@@ -17,8 +17,6 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    let keychain = KeychainSwift()
-    
     let clientId = "2e3f716396d03894aad3"
     let clientSecret = "f3358bbd82b6999da62189a92b1210adf97511ed"
     
@@ -37,7 +35,7 @@ class LoginViewController: UIViewController {
         if let username = usernameTextField.text, let password = passwordTextField.text {
             UserDefaults.standard.set(username, forKey: "username")
             UserDefaults.standard.synchronize()
-            keychain.set(password, forKey: "password")
+            Helper.keychain.set(password, forKey: "password")
         }
         
         MBProgressHUD.showAdded(to: self.view, animated: true)
